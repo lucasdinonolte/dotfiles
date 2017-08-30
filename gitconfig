@@ -1,0 +1,45 @@
+[user]
+	name = Lucas Dino Nolte
+	email = hello@lucas-nolte.com
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+
+[core]
+	editor = vim
+
+[alias]
+	au = add -u
+	st = status
+	ci = commit
+	br = branch
+	cine = commit --no-edit
+	co = checkout
+	df = diff
+	dfs = diff --staged
+	last = show HEAD~1..HEAD
+	log-pretty = log --pretty='%C(blue)%h %C(green)%aN %C(yellow)%s%C(red)%d %C(blue)%ar%Creset' --graph
+	lgp = "!git log-pretty"
+	lgg = "!git log-pretty --first-parent"
+	l = "!git log-pretty --first-parent -n10"
+	up = "!git set-upstream"
+	obsolete = "!git branch --merged | grep -v \"\\\\*\\\\|master\\\\|$(git symbolic-ref --short HEAD)\""
+	trim-local = "!git obsolete | xargs git branch -d"
+	trim-remote = fetch --prune --all
+	trim = "!git trim-remote && git trim-local"
+	giveup = "!printf 'Do you really want to discard all staged, unstaged and untracked changes? [Yn] '; read yn; if [[ $yn =~ "^[yY]([eE][sS])?$" ]]; then (git reset > /dev/null && for f in $(git ls-files -m); do echo "Resetting $f"; done && git co . && git clean -fd); else echo 'aborted'; fi"
+	authors = "!git log --format='%aN (%ae)' | sort -u"
+	shame = blame -w -M -C
+	squash = commit --amend
+	fixup = commit --amend --no-edit
+	set-upstream = "!git branch --set-upstream-to=origin/$(git rev-parse --abbrev-ref HEAD)"
+	wat = "!git diff $(git merge-base HEAD master)"
+	pick = cherry-pick
+	wip = "!git add . && git commit -m WIP"
+	unwip = "!if [[ "$(git log HEAD~..HEAD --format='%s')" == "WIP" ]]; then git reset HEAD~1; else echo "Not a WIP commit"; fi"
+	first-child = "!bash -c 'c=${1:-HEAD}; set -- $(git rev-list --all --not \"$c\"^@ --children | grep $(git rev-parse \"$c\") ); shift; echo $1' -"
+	next = "!git checkout $(git first-child)"
+	prev = "!git checkout HEAD~1"

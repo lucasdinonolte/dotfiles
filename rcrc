@@ -1,0 +1,1 @@
+EXCLUDES='Brewfile Makefile rcrc README.md CHEATSHEET.md'
