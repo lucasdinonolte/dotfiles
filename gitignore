@@ -24,5 +24,9 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+# VIM Swap files
+*.swp
+*~
+
 # ctags file
 tags

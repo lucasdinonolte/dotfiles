@@ -1,4 +1,6 @@
 set nocompatible              " be iMproved, required
+set number
+
 filetype off                  " required
 
 " set the runtime path to include Vundle and initialize
@@ -16,12 +18,22 @@ set shortmess=atI
 " Enable syntax highlighting
 syntax on
 
-" Line numbers
-set number
-
 " Hight 80th column
 set textwidth=80
-set colorcolumn=+0
+
+" Spaces instead of tabs
+set tabstop=2
+set shiftwidth=2
+set expandtab
+
+" However, in Git commit messages, let’s make it 72 characters
+autocmd FileType gitcommit set textwidth=72
+
+" Colour the 81st (or 73rd) column so that we don’t type over our limit
+set colorcolumn=+1
+
+" In Git commit messages, also colour the 51st column (for titles)
+autocmd FileType gitcommit set colorcolumn+=51
 
 " Enable mouse
 if has("mouse_sgr")
@@ -34,8 +46,6 @@ end
 " Keep Plugin commands between vundle#begin/end.
 " plugin on GitHub repo
 Plugin 'tpope/vim-fugitive'
-" Enable support for editorconfigs
-Plugin 'editorconfig/editorconfig-vim'
 " CTRLP
 Plugin 'ctrlpvim/ctrlp.vim'
 " Configure CTRLP
@@ -63,7 +73,7 @@ Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
-filetype plugin indent on    " required
+filetype plugin on    " required
 " To ignore plugin indent changes, instead use:
 "filetype plugin on
 "
