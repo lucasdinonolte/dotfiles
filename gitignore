@@ -26,6 +26,7 @@ Temporary Items
 
 # VIM Swap files
 *.swp
+*.swo
 *~
 
 # ctags file

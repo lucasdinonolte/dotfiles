@@ -15,8 +15,6 @@ Plugin 'VundleVim/Vundle.vim'
 " Hide startup message
 set shortmess=atI
 
-" Enable syntax highlighting
-syntax on
 
 " Hight 80th column
 set textwidth=80
@@ -54,6 +52,9 @@ set wildignore+=tags,doc,tmp,log,.git,node_modules,deps
 " Automatically parse the .gitignore
 Plugin 'vim-scripts/gitignore'
 
+" Additional Syntax Highlighting
+Plugin 'posva/vim-vue'
+
 " Syntax Linting
 Plugin 'scrooloose/syntastic'
 Plugin 'gcorne/vim-sass-lint'
@@ -69,7 +70,12 @@ Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
 " Install L9 and avoid a Naming conflict if you've already installed a
 " different version somewhere else.
 " Plugin 'ascenator/L9', {'name': 'newL9'}
+" Plugin ACK
+Plugin 'mileszs/ack.vim'
 
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep'
+endif
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -113,11 +119,16 @@ let g:syntastic_check_on_wq = 0
 let g:syntastic_sass_checkers=["sasslint"]
 let g:syntastic_scss_checkers=["sasslint"]
 
-" Use general config file
-let g:sass_lint_config = '~/.sass-lint.yml'
-
 " Set theme
-colorscheme github 
+syntax on
+set background=dark
+colorscheme solarized 
+
+" Shortcuts for switching windows
+map <C-h> <C-w>h
+map <C-j> <C-w>j
+map <C-k> <C-w>k
+map <C-l> <C-w>l
 
 " Disable arrow keys for the sake of learning proper vim
 noremap <Up> <NOP>
