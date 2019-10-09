@@ -24,6 +24,9 @@ set tabstop=2
 set shiftwidth=2
 set expandtab
 
+" Hybrid Line Numbers
+set number relativenumber
+
 " However, in Git commit messages, let’s make it 72 characters
 autocmd FileType gitcommit set textwidth=72
 
@@ -55,9 +58,7 @@ Plugin 'vim-scripts/gitignore'
 " Additional Syntax Highlighting
 Plugin 'posva/vim-vue'
 
-" Syntax Linting
-Plugin 'scrooloose/syntastic'
-Plugin 'gcorne/vim-sass-lint'
+Plugin 'w0rp/ale'
 
 " plugin from http://vim-scripts.org/vim/scripts.html
 " Plugin 'L9'
@@ -94,35 +95,26 @@ filetype plugin on    " required
 
 execute pathogen#infect()
 
+" Be gone SWAP Files
+set nobackup
+set nowritebackup
+set noswapfile
+
 " Always show statusline
 set laststatus=2
-
-" File explorer
-let g:NERDTreeChDirMode=2
-let g:NERDTreeCascadeSingleChildDir=0
-" These mappings would interfere with vim-tmux-navigator
-let g:NERDTreeMapJumpNextSibling=''
-let g:NERDTreeMapJumpPrevSibling=''
-let g:NERDTreeMinimalUI=1
 
 " General Linting Setup
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-
-" Setup SASS Linting
-let g:syntastic_sass_checkers=["sasslint"]
-let g:syntastic_scss_checkers=["sasslint"]
-
 " Set theme
 syntax on
 set background=dark
 colorscheme solarized 
+
+" Fix randomly stopping syntax highlighting
+autocmd FileType vue syntax sync fromstart
 
 " Shortcuts for switching windows
 map <C-h> <C-w>h
