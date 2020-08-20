@@ -24,9 +24,6 @@ set tabstop=2
 set shiftwidth=2
 set expandtab
 
-" Hybrid Line Numbers
-set number relativenumber
-
 " However, in Git commit messages, let’s make it 72 characters
 autocmd FileType gitcommit set textwidth=72
 
@@ -127,3 +124,6 @@ noremap <Up> <NOP>
 noremap <Down> <NOP>
 noremap <Left> <NOP>
 noremap <Right> <NOP>
+
+" OpenFrameworks make
+let &makeprg = 'if [ -f Makefile ]; then make Release && make RunRelease; else make Release -C .. && make RunRelease -C ..; fi'

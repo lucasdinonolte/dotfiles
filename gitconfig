@@ -3,10 +3,10 @@
 	email = hello@lucas-nolte.com
 
 [filter "lfs"]
+	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
-	clean = git-lfs clean -- %f
 
 [core]
 	editor = vim
@@ -14,13 +14,14 @@
 
 [alias]
 	au = add -u
-	st = status
 	ci = commit
 	br = branch
 	cine = commit --no-edit
+	squash = commit --amend
+	fixup = commit --amend --no-edit
 	co = checkout
-	df = diff
-	dfs = diff --staged
+	df = diff -w
+	dfs = diff --staged -w
 	last = show HEAD~1..HEAD
 	log-pretty = log --pretty='%C(blue)%h %C(green)%aN %C(yellow)%s%C(red)%d %C(blue)%ar%Creset' --graph
 	lgp = "!git log-pretty"
@@ -34,8 +35,6 @@
 	giveup = "!printf 'Do you really want to discard all staged, unstaged and untracked changes? [Yn] '; read yn; if [[ $yn =~ "^[yY]([eE][sS])?$" ]]; then (git reset > /dev/null && for f in $(git ls-files -m); do echo "Resetting $f"; done && git co . && git clean -fd); else echo 'aborted'; fi"
 	authors = "!git log --format='%aN (%ae)' | sort -u"
 	shame = blame -w -M -C
-	squash = commit --amend
-	fixup = commit --amend --no-edit
 	set-upstream = "!git branch --set-upstream-to=origin/$(git rev-parse --abbrev-ref HEAD)"
 	wat = "!git diff $(git merge-base HEAD master)"
 	pick = cherry-pick
@@ -44,5 +43,6 @@
 	first-child = "!bash -c 'c=${1:-HEAD}; set -- $(git rev-list --all --not \"$c\"^@ --children | grep $(git rev-parse \"$c\") ); shift; echo $1' -"
 	next = "!git checkout $(git first-child)"
 	prev = "!git checkout HEAD~1"
+  recap = log --all --oneline --no-merges --author=hello@lucas-nolte.com
 [commit]
 	template = /Users/lucas.nolte/.git-commit-template
