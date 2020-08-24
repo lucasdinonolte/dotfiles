@@ -13,6 +13,7 @@
   excludesfile = ~/.gitignore
 
 [alias]
+  st = status -sb
 	au = add -u
 	ci = commit
 	br = branch
@@ -34,6 +35,7 @@
 	trim = "!git trim-remote && git trim-local"
 	giveup = "!printf 'Do you really want to discard all staged, unstaged and untracked changes? [Yn] '; read yn; if [[ $yn =~ "^[yY]([eE][sS])?$" ]]; then (git reset > /dev/null && for f in $(git ls-files -m); do echo "Resetting $f"; done && git co . && git clean -fd); else echo 'aborted'; fi"
 	authors = "!git log --format='%aN (%ae)' | sort -u"
+  rank = shortlog -sn --no-merges
 	shame = blame -w -M -C
 	set-upstream = "!git branch --set-upstream-to=origin/$(git rev-parse --abbrev-ref HEAD)"
 	wat = "!git diff $(git merge-base HEAD master)"
@@ -44,5 +46,6 @@
 	next = "!git checkout $(git first-child)"
 	prev = "!git checkout HEAD~1"
   recap = log --all --oneline --no-merges --author=hello@lucas-nolte.com
+  pfusch = push -f
 [commit]
 	template = /Users/lucas.nolte/.git-commit-template
