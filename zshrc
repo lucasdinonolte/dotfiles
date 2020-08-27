@@ -93,6 +93,9 @@ eval "$(rbenv init -)"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 # Add some nice aliases
 alias git=hub
+# For lazy people
+alias g=hub
+
 alias work="cd /Users/lucas.nolte/zwtg-Work"
 
 # aliases for Tmux
