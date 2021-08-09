@@ -14,15 +14,12 @@ brew "vim"
 brew "watchman"
 brew "zsh"
 
-# Heroku
-brew "heroku"
-brew "parity"
-
 # GitHub
 brew "hub"
 
 # Image manipulation
 brew "imagemagick"
+brew "ffmpeg"
 
 # Testing
 brew "qt@5.5" if MacOS::Xcode.installed?
@@ -33,7 +30,3 @@ brew "node"
 brew "rbenv"
 brew "ruby-build"
 brew "yarn"
-
-# Databases
-brew "postgres", restart_service: :changed
-brew "redis", restart_service: :changed
