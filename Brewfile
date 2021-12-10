@@ -18,15 +18,15 @@ brew "zsh"
 brew "hub"
 
 # Image manipulation
-brew "imagemagick"
 brew "ffmpeg"
-
-# Testing
-brew "qt@5.5" if MacOS::Xcode.installed?
 
 # Programming languages and package managers
 brew "libyaml" # should come after openssl
 brew "node"
-brew "rbenv"
-brew "ruby-build"
-brew "yarn"
+brew "nvm"
+brew "clojure/tools/clojure"
+
+# Casks
+cask "processing"
+cask "hammerspoon"
+cask "nextcloud"

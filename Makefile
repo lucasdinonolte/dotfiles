@@ -1,10 +1,10 @@
-install: install-brew install-bundle install-fish install-rcs install-vim-plugins
+install: install-bundle install-zsh install-rcs install-vim-plugins
 
 install-brew:
 	/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 	brew tap Homebrew/bundle
 
-install-brew-update:
+install-bundle:
 	brew update
 	brew bundle
 

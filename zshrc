@@ -2,7 +2,16 @@
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/lucas.nolte/.oh-my-zsh
+export ZSH=$HOME/.oh-my-zsh
+
+# General Setup
+export NEXTCLOUD=/Users/lucasdinonolte/Nextcloud
+export WIKI_PATH=$NEXTCLOUD/Wiki
+export EDITOR=vim
+
+export NVM_DIR="$HOME/.nvm"
+  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && . "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+  [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && . "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
 export TERM=xterm-256color
 
@@ -79,10 +88,6 @@ source $ZSH/oh-my-zsh.sh
 # ssh
 export SSH_KEY_PATH="~/.ssh/rsa_id"
 
-# Rbenv
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
-
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
@@ -96,7 +101,13 @@ alias git=hub
 # For lazy people
 alias g=hub
 
-alias work="cd /Users/lucas.nolte/zwtg-Work"
+# aliases for daily work
+alias work="cd $HOME/work"
+alias dev="cd $HOME/work/__dev"
+alias wiki="cd $WIKI_PATH"
+alias memex="muninn --root $WIKI_PATH"
+alias today="$EDITOR +Today"
+alias inbox="$EDITOR +WikiInbox"
 
 # aliases for Tmux
 alias tmux='tmux -2'
@@ -106,10 +117,9 @@ alias tls='tmux ls'
 alias tkill='tmux kill-session -t'
 
 # convenience aliases for editing configs
-alias ev='vim ~/.vimrc'
-alias et='vim ~/.tmux.conf'
-alias ez='vim ~/.zshrc'
-
+alias ev='$EDITOR ~/.vimrc'
+alias et='$EDITOR ~/.tmux.conf'
+alias ez='$EDITOR ~/.zshrc'
 
 export OF_ROOT=~/Documents/of_v0.11.0_osx_release
 

@@ -15,14 +15,42 @@ Plugin 'VundleVim/Vundle.vim'
 " Hide startup message
 set shortmess=atI
 
-
-" Hight 80th column
+" Highlight 80th column
 set textwidth=80
+
+" encoding
+set encoding=utf-8
+set fileencodings=utf-8
+
+" yank and paste with system clipboard
+set clipboard=unnamed
+
+" watch for file changes
+set autoread
+
+" don't beep
+" no bells
+set noeb vb t_vb=
+set belloff=all
+set noerrorbells
+
+" command window height
+set cmdwinheight=3
 
 " Spaces instead of tabs
 set tabstop=2
 set shiftwidth=2
 set expandtab
+
+set shiftround
+set autoindent
+set smartindent
+set cindent
+set breakindent
+
+" German keyboard means SPACE as leaderkey
+nnoremap <SPACE> <Nop>
+let mapleader=" "
 
 " However, in Git commit messages, let’s make it 72 characters
 autocmd FileType gitcommit set textwidth=72
@@ -58,6 +86,12 @@ Plugin 'posva/vim-vue'
 Plugin 'w0rp/ale'
 Plugin 'scrooloose/syntastic'
 Plugin 'vim-airline/vim-airline'
+
+Plugin 'godlygeek/tabular'
+Plugin 'plasticboy/vim-markdown'
+
+" Memex Dreams
+Plugin 'szymonkaliski/muninn-vim'
 
 " plugin from http://vim-scripts.org/vim/scripts.html
 " Plugin 'L9'
@@ -107,7 +141,6 @@ set statusline+=%*
 " Set theme
 syntax on
 set background=dark
-colorscheme solarized 
 
 " Fix randomly stopping syntax highlighting
 autocmd FileType vue syntax sync fromstart
@@ -124,5 +157,72 @@ noremap <Down> <NOP>
 noremap <Left> <NOP>
 noremap <Right> <NOP>
 
-" OpenFrameworks make
-let &makeprg = 'if [ -f Makefile ]; then make Release && make RunRelease; else make Release -C .. && make RunRelease -C ..; fi'
+" Processing Stuff
+au BufRead,BufNewFile *.pde set filetype=java
+:command P5 :! processing-java --sketch=$PWD --run
+nnoremap <leader>rr :P5<cr>
+
+
+" Memex Dreams
+let g:muninn_path = expand('$WIKI_PATH/') " configure muninn wiki path, required!
+
+function! s:open_today()
+  " opens today daily log plus quickfix window with tasks
+
+  call muninn#journal_today()
+  call muninn#tasks_today()
+endfunction
+
+" commands
+command! Tasks         call muninn#tasks_today()
+command! Today         call <sid>open_today()
+
+command! WikiJournal   call muninn#journal_today()
+command! WikiInbox     call muninn#open('inbox')
+command! WikiBacklinks call muninn#backlinks()
+command! WikiUI        call muninn#open_ui()
+
+command! -nargs=? -complete=custom,muninn#complete_open Wiki call muninn#open(<f-args>)
+
+" maps
+nnoremap <leader>wt :Tasks<cr>
+nnoremap <leader>wj :WikiJournal<cr>
+nnoremap <leader>wi :WikiInbox<cr>
+nnoremap <leader>wb :WikiBacklinks<cr>
+nnoremap <leader>wu :WikiUI<cr>
+
+" bindings for working with tasks:
+" - td - toggle to[d]o
+" - tt - task for [t]oday
+" - tm - task for to[m]orrow
+" - tw - task is [w]aiting
+
+augroup muninn_markdown
+  autocmd!
+
+  autocmd FileType markdown nnoremap <buffer> <leader>td :<c-u>call muninn#toggle_todo()<cr>
+  autocmd FileType markdown nnoremap <buffer> <leader>tm :<c-u>call muninn#toggle_tag('due', '<c-r>=strftime('%Y-%m-%d', localtime() + 86400)<cr>')<cr>
+  autocmd FileType markdown nnoremap <buffer> <leader>tt :<c-u>call muninn#toggle_tag('due', '<c-r>=strftime('%Y-%m-%d')<cr>')<cr>
+  autocmd FileType markdown nnoremap <buffer> <leader>tw :<c-u>call muninn#toggle_tag('waiting', '')<cr>
+augroup END
+
+" - list item @any(tag with comments)
+" - list item @tag-without-comments
+syntax match markdownTag /\ @\S*/     containedin=mkdListItemLine
+syntax match markdownTag /\ @\S*(.*)/ containedin=mkdListItemLine
+
+" - list item @due(today-date)
+execute "syntax match markdownTodoToday '\ @due(" . strftime('%Y-%m-%d') . ")' containedin=mkdListItemLine"
+
+" - [ ] empty checkbox
+" - [x] checked checkbox
+syntax match markdownListItemCheckbox /^\s*-\ \[x\]\ .*$/
+syntax match markdownUnchecked "\[ \]" containedin=mkdListItemLine,markdownListItemCheckbox
+syntax match markdownChecked   "\[x\]" containedin=mkdListItemLine,markdownListItemCheckbox
+
+" ~~strikethrough~~
+syntax region markdownStrikethrough start="\S\@<=\~\~\|\~\~\S\@=" end="\S\@<=\~\~\|\~\~\S\@=" keepend containedin=ALL
+syntax match markdownStrikethroughLines "\~\~" conceal containedin=markdownStrikethrough
+
+highlight def link markdownStrikethroughLines Comment
+highlight def link markdownStrikethrough      Comment
