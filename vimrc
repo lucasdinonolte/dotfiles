@@ -18,6 +18,15 @@ set shortmess=atI
 " Highlight 80th column
 set textwidth=80
 
+" However, in Git commit messages, let’s make it 72 characters
+autocmd FileType gitcommit set textwidth=72
+
+" Colour the 81st (or 73rd) column so that we don’t type over our limit
+set colorcolumn=+1
+
+" In Git commit messages, also colour the 51st column (for titles)
+autocmd FileType gitcommit set colorcolumn+=51
+
 " encoding
 set encoding=utf-8
 set fileencodings=utf-8
@@ -52,15 +61,6 @@ set breakindent
 nnoremap <SPACE> <Nop>
 let mapleader=" "
 
-" However, in Git commit messages, let’s make it 72 characters
-autocmd FileType gitcommit set textwidth=72
-
-" Colour the 81st (or 73rd) column so that we don’t type over our limit
-set colorcolumn=+1
-
-" In Git commit messages, also colour the 51st column (for titles)
-autocmd FileType gitcommit set colorcolumn+=51
-
 " Enable mouse
 if has("mouse_sgr")
 	set ttymouse=sgr
@@ -88,7 +88,6 @@ Plugin 'scrooloose/syntastic'
 Plugin 'vim-airline/vim-airline'
 
 Plugin 'godlygeek/tabular'
-Plugin 'plasticboy/vim-markdown'
 
 " Memex Dreams
 Plugin 'szymonkaliski/muninn-vim'
@@ -141,6 +140,9 @@ set statusline+=%*
 " Set theme
 syntax on
 set background=dark
+
+" Manually set languages for some file types
+au BufRead,BufNewFile *.astro set filetype=html
 
 " Fix randomly stopping syntax highlighting
 autocmd FileType vue syntax sync fromstart
@@ -205,24 +207,3 @@ augroup muninn_markdown
   autocmd FileType markdown nnoremap <buffer> <leader>tt :<c-u>call muninn#toggle_tag('due', '<c-r>=strftime('%Y-%m-%d')<cr>')<cr>
   autocmd FileType markdown nnoremap <buffer> <leader>tw :<c-u>call muninn#toggle_tag('waiting', '')<cr>
 augroup END
-
-" - list item @any(tag with comments)
-" - list item @tag-without-comments
-syntax match markdownTag /\ @\S*/     containedin=mkdListItemLine
-syntax match markdownTag /\ @\S*(.*)/ containedin=mkdListItemLine
-
-" - list item @due(today-date)
-execute "syntax match markdownTodoToday '\ @due(" . strftime('%Y-%m-%d') . ")' containedin=mkdListItemLine"
-
-" - [ ] empty checkbox
-" - [x] checked checkbox
-syntax match markdownListItemCheckbox /^\s*-\ \[x\]\ .*$/
-syntax match markdownUnchecked "\[ \]" containedin=mkdListItemLine,markdownListItemCheckbox
-syntax match markdownChecked   "\[x\]" containedin=mkdListItemLine,markdownListItemCheckbox
-
-" ~~strikethrough~~
-syntax region markdownStrikethrough start="\S\@<=\~\~\|\~\~\S\@=" end="\S\@<=\~\~\|\~\~\S\@=" keepend containedin=ALL
-syntax match markdownStrikethroughLines "\~\~" conceal containedin=markdownStrikethrough
-
-highlight def link markdownStrikethroughLines Comment
-highlight def link markdownStrikethrough      Comment
