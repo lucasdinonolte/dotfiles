@@ -1,18 +1,44 @@
+call plug#begin('~/.vim/plugged')
+
+" Always load
+Plug 'ctrlpvim/ctrlp.vim'
+" Configuration for CTRL-P
+set wildignore+=tags,doc,tmp,log,.git,node_modules,deps
+
+Plug 'vim-scripts/gitignore'
+Plug 'honza/vim-snippets'
+Plug 'szymonkaliski/muninn-vim'
+Plug 'mattn/emmet-vim'
+Plug 'w0rp/ale'
+Plug 'mileszs/ack.vim'
+Plug 'neoclide/coc.nvim',                  { 'do': { -> coc#util#install() } }
+Plug 'itchyny/lightline.vim'
+Plug 'maximbaz/lightline-ale'
+Plug 'ayu-theme/ayu-vim'
+
+let g:ale_fixers = {'javascript': ['prettier', 'eslint']}
+let g:ale_fix_on_save = 1
+
+if executable('ag')
+  let g:ackprg = 'ag --vimgrep'
+endif
+
+" Load based on filetype
+Plug 'posva/vim-vue',                      { 'for': 'vue' }
+Plug 'cespare/vim-toml',                   { 'for': 'toml' }
+Plug 'elzr/vim-json',                      { 'for': 'json' }
+Plug 'leafgarland/typescript-vim',         { 'for': [ 'typescript', 'typescript.tsx' ] }
+Plug 'moll/vim-node',                      { 'for': 'javascript' }
+Plug 'neoclide/vim-jsx-improve',           { 'for': [ 'javascript', 'html' ] }
+Plug 'othree/html5.vim',                   { 'for': 'html' }
+Plug 'plasticboy/vim-markdown',            { 'for': 'markdown' }
+Plug 'sophacles/vim-processing',           { 'for': 'processing' }
+Plug 'tasn/vim-tsx',                       { 'for': 'typescript.tsx' }
+
+call plug#end()
+
 set nocompatible              " be iMproved, required
 set number
-
-filetype off                  " required
-
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
-
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
-
-" Hide startup message
 set shortmess=atI
 
 " Highlight 80th column
@@ -47,8 +73,10 @@ set noerrorbells
 set cmdwinheight=3
 
 " Spaces instead of tabs
+filetype plugin indent on
 set tabstop=2
 set shiftwidth=2
+set softtabstop=2
 set expandtab
 
 set shiftround
@@ -68,62 +96,6 @@ elseif has("mouse_xterm")
 	set ttymouse=xterm2
 end
 
-" The following are examples of different formats supported.
-" Keep Plugin commands between vundle#begin/end.
-" plugin on GitHub repo
-Plugin 'tpope/vim-fugitive'
-" CTRLP
-Plugin 'ctrlpvim/ctrlp.vim'
-" Configure CTRLP
-set wildignore+=tags,doc,tmp,log,.git,node_modules,deps
-
-" Automatically parse the .gitignore
-Plugin 'vim-scripts/gitignore'
-
-" Additional Syntax Highlighting
-Plugin 'posva/vim-vue'
-
-Plugin 'w0rp/ale'
-Plugin 'scrooloose/syntastic'
-Plugin 'vim-airline/vim-airline'
-
-Plugin 'godlygeek/tabular'
-
-" Memex Dreams
-Plugin 'szymonkaliski/muninn-vim'
-
-" plugin from http://vim-scripts.org/vim/scripts.html
-" Plugin 'L9'
-" Git plugin not hosted on GitHub
-Plugin 'git://git.wincent.com/command-t.git'
-" git repos on your local machine (i.e. when working on your own plugin)
-" The sparkup vim script is in a subdirectory of this repo called vim.
-" Pass the path to set the runtimepath properly.
-Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
-" Install L9 and avoid a Naming conflict if you've already installed a
-" different version somewhere else.
-" Plugin 'ascenator/L9', {'name': 'newL9'}
-" Plugin ACK
-Plugin 'mileszs/ack.vim'
-
-if executable('ag')
-  let g:ackprg = 'ag --vimgrep'
-endif
-
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
 " Be gone SWAP Files
 set nobackup
 set nowritebackup
@@ -134,13 +106,20 @@ set laststatus=2
 
 " General Linting Setup
 set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
-" Set theme
-syntax on
-set background=dark
+" always display tabline
+set showtabline=1
 
+" Set theme
+syntax enable
+set background=dark
+set termguicolors     " enable true colors support
+let ayucolor="dark"   " for dark version of theme
+colorscheme ayu
+
+" don't syntax highlight long lines
+set synmaxcol=1024
 " Manually set languages for some file types
 au BufRead,BufNewFile *.astro set filetype=html
 
