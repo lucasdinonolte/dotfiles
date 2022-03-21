@@ -5,9 +5,6 @@ export PATH=$HOME/bin:/usr/local/bin:$PATH
 export ZSH=$HOME/.oh-my-zsh
 
 # General Setup
-export NEXTCLOUD="$HOME/NextCloud\ Personal"
-export WIKI_PATH=$NEXTCLOUD/Wiki
-export SKETCHES="$HOME/NextCloud Personal/Sketches"
 export EDITOR=vim
 
 export NVM_DIR="$HOME/.nvm"
@@ -38,6 +35,9 @@ plugins=(
 )
 
 source $ZSH/oh-my-zsh.sh
+source ~/.zsh/machine.zsh
+source ~/.zsh/aliases.zsh
+source ~/.zsh/functions.zsh
 
 # User configuration
 
@@ -68,37 +68,9 @@ export SSH_KEY_PATH="~/.ssh/rsa_id"
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 # Add some nice aliases
-alias git=hub
 # For lazy people
-alias g=hub
 
 # aliases for daily work
-alias work="cd $HOME/work"
-alias dev="cd $HOME/work/__dev"
-alias wiki="cd $WIKI_PATH"
-alias memex="muninn --root $WIKI_PATH"
-alias today="$EDITOR +Today"
-alias inbox="$EDITOR +WikiInbox"
-
-mksketch() {
-  local tstamp="$(date +%Y%m%d_%H%M)"
-  mkdir -p "$SKETCHES/sketch_$tstamp"
-  cd "$SKETCHES/sketch_$tstamp"
-  touch "sketch_$tstamp.pde"
-  vim "sketch_$tstamp.pde"
-}
-
-# aliases for Tmux
-alias tmux='tmux -2'
-alias ta='tmux attach -t'
-alias tnew='tmux new -s'
-alias tls='tmux ls'
-alias tkill='tmux kill-session -t'
-
-# convenience aliases for editing configs
-alias ev='$EDITOR ~/.vimrc'
-alias et='$EDITOR ~/.tmux.conf'
-alias ez='$EDITOR ~/.zshrc'
 
 export OF_ROOT=~/Documents/of_v0.11.0_osx_release
 
