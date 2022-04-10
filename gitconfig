@@ -49,3 +49,5 @@
   pfusch = push -f
 [commit]
 	template = ~/.git-commit-template
+[init]
+  defaultBranch = main
