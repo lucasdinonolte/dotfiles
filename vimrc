@@ -15,8 +15,11 @@ Plug 'neoclide/coc.nvim',                  { 'do': { -> coc#util#install() } }
 Plug 'itchyny/lightline.vim'
 Plug 'maximbaz/lightline-ale'
 Plug 'ayu-theme/ayu-vim'
+Plug 'peitalin/vim-jsx-typescript'
+Plug 'jparise/vim-graphql'
+Plug 'pangloss/vim-javascript'
 
-let g:ale_fixers = {'javascript': ['prettier', 'eslint']}
+let g:ale_fixers = {'javascript': ['prettier']}
 let g:ale_fix_on_save = 1
 
 if executable('ag')
@@ -29,11 +32,11 @@ Plug 'cespare/vim-toml',                   { 'for': 'toml' }
 Plug 'elzr/vim-json',                      { 'for': 'json' }
 Plug 'leafgarland/typescript-vim',         { 'for': [ 'typescript', 'typescript.tsx' ] }
 Plug 'moll/vim-node',                      { 'for': 'javascript' }
-Plug 'neoclide/vim-jsx-improve',           { 'for': [ 'javascript', 'html' ] }
+" Plug 'neoclide/vim-jsx-improve',           { 'for': [ 'javascript', 'html' ] }
 Plug 'othree/html5.vim',                   { 'for': 'html' }
 Plug 'plasticboy/vim-markdown',            { 'for': 'markdown' }
 Plug 'sophacles/vim-processing',           { 'for': 'processing' }
-Plug 'tasn/vim-tsx',                       { 'for': 'typescript.tsx' }
+" Plug 'tasn/vim-tsx',                       { 'for': 'typescript.tsx' }
 
 call plug#end()
 
@@ -123,8 +126,9 @@ set synmaxcol=1024
 " Manually set languages for some file types
 au BufRead,BufNewFile *.astro set filetype=html
 
-" Fix randomly stopping syntax highlighting
-autocmd FileType vue syntax sync fromstart
+" Force to rescan entire buffer when highlighting js, jsx or vue files
+autocmd BufEnter *.{js,jsx,ts,tsx,vue} :syntax sync fromstart
+autocmd BufLeave *.{js,jsx,ts,tsx,vue} :syntax sync clear
 
 " Shortcuts for switching windows
 map <C-h> <C-w>h

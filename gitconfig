@@ -48,4 +48,4 @@
   recap = log --all --oneline --no-merges --author=hello@lucas-nolte.com
   pfusch = push -f
 [commit]
-	template = /Users/lucas.nolte/.git-commit-template
+	template = ~/.git-commit-template
