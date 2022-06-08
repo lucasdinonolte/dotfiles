@@ -10,7 +10,10 @@ brew "rcm"
 brew "reattach-to-user-namespace"
 brew "the_silver_searcher"
 brew "tmux"
-brew "vim"
+
+# Making the switch to neovim
+# brew "vim"
+brew "neovim"
 brew "watchman"
 brew "zsh"
 

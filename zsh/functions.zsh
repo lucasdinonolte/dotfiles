@@ -14,3 +14,14 @@ mkprojectdirs() {
   mkdir '05 Produktion'
   mkdir '06 Präsentation'
 }
+
+jumpto() {
+  selected=$(find ~/work/__dev '/Users/lucasdinonolte/DSI Dropbox/Projects' -mindepth 1 -maxdepth 2 -type d | fzf)
+
+  if [[ -z $selected ]]; then
+    exit 0
+  fi
+
+  echo $selected
+  cd $selected
+}

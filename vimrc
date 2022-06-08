@@ -18,8 +18,12 @@ Plug 'ayu-theme/ayu-vim'
 Plug 'peitalin/vim-jsx-typescript'
 Plug 'jparise/vim-graphql'
 Plug 'pangloss/vim-javascript'
+"
+" Manually set languages for some file types
+au BufRead,BufNewFile *.astro set filetype=html
+au BufRead,BufNewFile *.mdx   set filetype=mdx syntax=javascript
 
-let g:ale_fixers = {'javascript': ['prettier']}
+let g:ale_fixers = { 'javascript': ['prettier'], 'css': ['prettier'], 'mdx': ['prettier'] }
 let g:ale_fix_on_save = 1
 
 if executable('ag')
@@ -56,6 +60,7 @@ set colorcolumn=+1
 " In Git commit messages, also colour the 51st column (for titles)
 autocmd FileType gitcommit set colorcolumn+=51
 
+
 " encoding
 set encoding=utf-8
 set fileencodings=utf-8
@@ -88,6 +93,16 @@ set smartindent
 set cindent
 set breakindent
 
+set scrolloff=3
+set cursorline
+set numberwidth=4
+set relativenumber
+set ignorecase
+set hlsearch
+set signcolumn=yes
+set splitbelow
+set splitright
+
 " German keyboard means SPACE as leaderkey
 nnoremap <SPACE> <Nop>
 let mapleader=" "
@@ -98,6 +113,12 @@ if has("mouse_sgr")
 elseif has("mouse_xterm")
 	set ttymouse=xterm2
 end
+
+" File Explorer Stuff
+nnoremap <C-n> :Lexplore<CR> :vertical resize 30<CR>
+
+" Terminal
+nnoremap <leader>t :sp<CR> :term<CR> :resize 20N<CR> i
 
 " Be gone SWAP Files
 set nobackup
@@ -121,10 +142,11 @@ set termguicolors     " enable true colors support
 let ayucolor="dark"   " for dark version of theme
 colorscheme ayu
 
+" CTRLP Settings
+let g:ctrlp_user_command = ['.git', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
+
 " don't syntax highlight long lines
 set synmaxcol=1024
-" Manually set languages for some file types
-au BufRead,BufNewFile *.astro set filetype=html
 
 " Force to rescan entire buffer when highlighting js, jsx or vue files
 autocmd BufEnter *.{js,jsx,ts,tsx,vue} :syntax sync fromstart
@@ -135,6 +157,9 @@ map <C-h> <C-w>h
 map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
+
+" Shortcut for search and replace
+nnoremap <C-S> :%s/
 
 " Disable arrow keys for the sake of learning proper vim
 noremap <Up> <NOP>
@@ -175,6 +200,18 @@ nnoremap <leader>wj :WikiJournal<cr>
 nnoremap <leader>wi :WikiInbox<cr>
 nnoremap <leader>wb :WikiBacklinks<cr>
 nnoremap <leader>wu :WikiUI<cr>
+
+nnoremap <silent> gd <Plug>(coc-definition)
+nnoremap <silent> gy <Plug>(coc-type-definition)
+nnoremap <silent> K :call ShowDocumentation()<CR>
+
+function! ShowDocumentation()
+  if CocAction('hasProvider', 'hover')
+    call CocActionAsync('doHover')
+  else
+    call feedkeys('K', 'in')
+  endif
+endfunction
 
 " bindings for working with tasks:
 " - td - toggle to[d]o

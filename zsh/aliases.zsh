@@ -11,6 +11,7 @@ alias tls='tmux ls'
 alias tkill='tmux kill-session -t'
 
 # convenience aliases for editing configs
+alias vim="$EDITOR"
 alias ev='$EDITOR ~/.vimrc'
 alias et='$EDITOR ~/.tmux.conf'
 alias ez='$EDITOR ~/.zshrc'

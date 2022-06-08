@@ -5,7 +5,7 @@ export PATH=$HOME/bin:/usr/local/bin:$PATH
 export ZSH=$HOME/.oh-my-zsh
 
 # General Setup
-export EDITOR=vim
+export EDITOR=nvim
 
 export NVM_DIR="$HOME/.nvm"
   [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && . "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
@@ -71,6 +71,8 @@ export SSH_KEY_PATH="~/.ssh/rsa_id"
 # For lazy people
 
 # aliases for daily work
+bindkey -s ^f "jumpto\n"
+
 
 export OF_ROOT=~/Documents/of_v0.11.0_osx_release
 
