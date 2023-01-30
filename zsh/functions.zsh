@@ -3,7 +3,7 @@ mksketch() {
   mkdir -p "$SKETCHES/sketch_$tstamp"
   cd "$SKETCHES/sketch_$tstamp"
   touch "sketch_$tstamp.pde"
-  vim "sketch_$tstamp.pde"
+  $EDITOR "sketch_$tstamp.pde"
 }
 
 mkprojectdirs() {
@@ -25,3 +25,8 @@ jumpto() {
   echo $selected
   cd $selected
 }
+
+serveDir() {
+  python3 -m SimpleHTTPServer 3000
+}
+

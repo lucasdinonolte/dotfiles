@@ -1,7 +1,5 @@
 alias git=hub
 alias g=hub
-alias today="$EDITOR +Today"
-alias inbox="$EDITOR +WikiInbox"
 
 # aliases for Tmux
 alias tmux='tmux -2'

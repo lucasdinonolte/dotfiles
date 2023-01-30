@@ -1,30 +1,60 @@
 call plug#begin('~/.vim/plugged')
 
 " Always load
-Plug 'ctrlpvim/ctrlp.vim'
-" Configuration for CTRL-P
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
+
 set wildignore+=tags,doc,tmp,log,.git,node_modules,deps
 
 Plug 'vim-scripts/gitignore'
-Plug 'honza/vim-snippets'
-Plug 'szymonkaliski/muninn-vim'
 Plug 'mattn/emmet-vim'
-Plug 'w0rp/ale'
 Plug 'mileszs/ack.vim'
-Plug 'neoclide/coc.nvim',                  { 'do': { -> coc#util#install() } }
+Plug 'neoclide/coc.nvim',                  { 'branch': 'release', 'do': { -> coc#util#install() } }
 Plug 'itchyny/lightline.vim'
-Plug 'maximbaz/lightline-ale'
 Plug 'ayu-theme/ayu-vim'
 Plug 'peitalin/vim-jsx-typescript'
 Plug 'jparise/vim-graphql'
 Plug 'pangloss/vim-javascript'
-"
+Plug 'honza/vim-snippets'
+Plug 'tpope/vim-fugitive'
+
 " Manually set languages for some file types
 au BufRead,BufNewFile *.astro set filetype=html
 au BufRead,BufNewFile *.mdx   set filetype=mdx syntax=javascript
 
-let g:ale_fixers = { 'javascript': ['prettier'], 'css': ['prettier'], 'mdx': ['prettier'] }
-let g:ale_fix_on_save = 1
+" COC Setup
+let g:coc_global_extensions = [ 'coc-tsserver' ]
+
+if isdirectory('./node_modules') && isdirectory('./node_modules/prettier')
+  let g:coc_global_extensions += ['coc-prettier']
+endif
+
+if isdirectory('./node_modules') && isdirectory('./node_modules/eslint')
+  let g:coc_global_extensions += ['coc-eslint']
+endif
+
+" Jumping around the code
+nnoremap <silent> gd <Plug>(coc-definition)
+nnoremap <silent> gy <Plug>(coc-type-definition)
+nnoremap <silent> K :call ShowDocumentation()<CR>
+
+nnoremap <silent> <space>i :<C-u>CocList diagnostics<cr>
+nnoremap <silent> <space>s :<C-u>CocList -I symbols<cr>
+
+nnoremap <silent> do <Plug>(coc-codeaction)
+nnoremap <silent> rn <Plug>(coc-rename)
+
+imap <C-l> <Plug>(coc-snippets-expand)
+
+function! ShowDocumentation()
+  if CocAction('hasProvider', 'hover')
+    call CocActionAsync('doHover')
+  else
+    call feedkeys('K', 'in')
+  endif
+endfunction
+
+" ==========================================================================
 
 if executable('ag')
   let g:ackprg = 'ag --vimgrep'
@@ -40,6 +70,7 @@ Plug 'moll/vim-node',                      { 'for': 'javascript' }
 Plug 'othree/html5.vim',                   { 'for': 'html' }
 Plug 'plasticboy/vim-markdown',            { 'for': 'markdown' }
 Plug 'sophacles/vim-processing',           { 'for': 'processing' }
+Plug 'evanleck/vim-svelte',                { 'for': 'svelte' }
 " Plug 'tasn/vim-tsx',                       { 'for': 'typescript.tsx' }
 
 call plug#end()
@@ -93,26 +124,20 @@ set smartindent
 set cindent
 set breakindent
 
-set scrolloff=3
-set cursorline
+set scrolloff=8
+set guicursor=" "
 set numberwidth=4
 set relativenumber
 set ignorecase
-set hlsearch
+set incsearch
 set signcolumn=yes
 set splitbelow
 set splitright
+set spell
 
 " German keyboard means SPACE as leaderkey
 nnoremap <SPACE> <Nop>
 let mapleader=" "
-
-" Enable mouse
-if has("mouse_sgr")
-	set ttymouse=sgr
-elseif has("mouse_xterm")
-	set ttymouse=xterm2
-end
 
 " File Explorer Stuff
 nnoremap <C-n> :Lexplore<CR> :vertical resize 30<CR>
@@ -142,9 +167,6 @@ set termguicolors     " enable true colors support
 let ayucolor="dark"   " for dark version of theme
 colorscheme ayu
 
-" CTRLP Settings
-let g:ctrlp_user_command = ['.git', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
-
 " don't syntax highlight long lines
 set synmaxcol=1024
 
@@ -152,14 +174,30 @@ set synmaxcol=1024
 autocmd BufEnter *.{js,jsx,ts,tsx,vue} :syntax sync fromstart
 autocmd BufLeave *.{js,jsx,ts,tsx,vue} :syntax sync clear
 
+" Shortcut for spellchecking
+nnoremap <leader>ss :setlocal spell!<CR>
+
 " Shortcuts for switching windows
 map <C-h> <C-w>h
 map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
 
+" Move blocks around in visual mode
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '>-2<CR>gv=gv
+
 " Shortcut for search and replace
 nnoremap <C-S> :%s/
+nnoremap <leader>s :%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>
+
+" Telescope things
+nnoremap <C-P> <cmd>Telescope git_files<cr>
+nnoremap <leader>pf <cmd>Telescope find_files<cr>
+nnoremap <C-F> <cmd>Telescope live_grep<cr>
+
+" Shortcut to go into command line mode
+nnoremap <C-r> :!
 
 " Disable arrow keys for the sake of learning proper vim
 noremap <Up> <NOP>
@@ -172,58 +210,3 @@ au BufRead,BufNewFile *.pde set filetype=java
 :command P5 :! processing-java --sketch=$PWD --run
 nnoremap <leader>rr :P5<cr>
 
-
-" Memex Dreams
-let g:muninn_path = expand('$WIKI_PATH/') " configure muninn wiki path, required!
-
-function! s:open_today()
-  " opens today daily log plus quickfix window with tasks
-
-  call muninn#journal_today()
-  call muninn#tasks_today()
-endfunction
-
-" commands
-command! Tasks         call muninn#tasks_today()
-command! Today         call <sid>open_today()
-
-command! WikiJournal   call muninn#journal_today()
-command! WikiInbox     call muninn#open('inbox')
-command! WikiBacklinks call muninn#backlinks()
-command! WikiUI        call muninn#open_ui()
-
-command! -nargs=? -complete=custom,muninn#complete_open Wiki call muninn#open(<f-args>)
-
-" maps
-nnoremap <leader>wt :Tasks<cr>
-nnoremap <leader>wj :WikiJournal<cr>
-nnoremap <leader>wi :WikiInbox<cr>
-nnoremap <leader>wb :WikiBacklinks<cr>
-nnoremap <leader>wu :WikiUI<cr>
-
-nnoremap <silent> gd <Plug>(coc-definition)
-nnoremap <silent> gy <Plug>(coc-type-definition)
-nnoremap <silent> K :call ShowDocumentation()<CR>
-
-function! ShowDocumentation()
-  if CocAction('hasProvider', 'hover')
-    call CocActionAsync('doHover')
-  else
-    call feedkeys('K', 'in')
-  endif
-endfunction
-
-" bindings for working with tasks:
-" - td - toggle to[d]o
-" - tt - task for [t]oday
-" - tm - task for to[m]orrow
-" - tw - task is [w]aiting
-
-augroup muninn_markdown
-  autocmd!
-
-  autocmd FileType markdown nnoremap <buffer> <leader>td :<c-u>call muninn#toggle_todo()<cr>
-  autocmd FileType markdown nnoremap <buffer> <leader>tm :<c-u>call muninn#toggle_tag('due', '<c-r>=strftime('%Y-%m-%d', localtime() + 86400)<cr>')<cr>
-  autocmd FileType markdown nnoremap <buffer> <leader>tt :<c-u>call muninn#toggle_tag('due', '<c-r>=strftime('%Y-%m-%d')<cr>')<cr>
-  autocmd FileType markdown nnoremap <buffer> <leader>tw :<c-u>call muninn#toggle_tag('waiting', '')<cr>
-augroup END

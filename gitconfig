@@ -1,6 +1,6 @@
 [user]
-	name = Lucas Dino Nolte
-	email = hello@lucas-nolte.com
+	name = Lucas Nolte
+	email = lucas@designsystems.international
 
 [filter "lfs"]
 	clean = git-lfs clean -- %f
@@ -21,7 +21,10 @@
 	squash = commit --amend
 	fixup = commit --amend --no-edit
 	co = checkout
+  po = pull origin
+  fo = fetch origin
 	df = diff -w
+  rh = reset HEAD
 	dfs = diff --staged -w
 	last = show HEAD~1..HEAD
 	log-pretty = log --pretty='%C(blue)%h %C(green)%aN %C(yellow)%s%C(red)%d %C(blue)%ar%Creset' --graph
