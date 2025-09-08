@@ -1,6 +1,7 @@
 [user]
 	name = Lucas Nolte
 	email = lucas@designsystems.international
+	signingkey = /Users/lucasdinonolte/.ssh/id_ed25519.pub
 
 [filter "lfs"]
 	clean = git-lfs clean -- %f
@@ -9,7 +10,7 @@
 	required = true
 
 [core]
-	editor = vim
+	editor = nvim
   excludesfile = ~/.gitignore
 
 [alias]
@@ -21,6 +22,8 @@
 	squash = commit --amend
 	fixup = commit --amend --no-edit
 	co = checkout
+  coi = "!git checkout $(git branch | grep -v '^\\*' | fzf --height=20% --reverse)"
+  m = checkout main
   po = pull origin
   fo = fetch origin
 	df = diff -w
@@ -32,7 +35,7 @@
 	lgg = "!git log-pretty --first-parent"
 	l = "!git log-pretty --first-parent -n10"
 	up = "!git set-upstream"
-	obsolete = "!git branch --merged | grep -v \"\\\\*\\\\|master\\\\|$(git symbolic-ref --short HEAD)\""
+	obsolete = "!git branch --merged | grep -v \"\\\\*\\\\|main\\\\|$(git symbolic-ref --short HEAD)\""
 	trim-local = "!git obsolete | xargs git branch -d"
 	trim-remote = fetch --prune --all
 	trim = "!git trim-remote && git trim-local"
@@ -41,7 +44,7 @@
   rank = shortlog -sn --no-merges
 	shame = blame -w -M -C
 	set-upstream = "!git branch --set-upstream-to=origin/$(git rev-parse --abbrev-ref HEAD)"
-	wat = "!git diff $(git merge-base HEAD master)"
+	wat = "!git diff $(git merge-base HEAD main)"
 	pick = cherry-pick
 	wip = "!git add . && git commit -m WIP"
 	unwip = "!if [[ "$(git log HEAD~..HEAD --format='%s')" == "WIP" ]]; then git reset HEAD~1; else echo "Not a WIP commit"; fi"
@@ -49,8 +52,13 @@
 	next = "!git checkout $(git first-child)"
 	prev = "!git checkout HEAD~1"
   recap = log --all --oneline --no-merges --author=hello@lucas-nolte.com
-  pfusch = push -f
+  pfusch = push --force-with-lease
+  push-current = push -u origin HEAD
+  todo = "!git diff $(git merge-base HEAD main) | grep -E '^(diff|\\+)' | grep "TODO""
 [commit]
 	template = ~/.git-commit-template
+	gpgsign = true
 [init]
   defaultBranch = main
+[gpg]
+	format = ssh

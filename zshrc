@@ -33,7 +33,6 @@ ZSH_THEME="spaceship"
 plugins=(
   git
   gitfast
-zsh-autosuggestions
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -58,6 +57,9 @@ source ~/.zsh/functions.zsh
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
+# git completion
+fpath=(~/.zsh $fpath)
+
 # ssh
 export SSH_KEY_PATH="~/.ssh/rsa_id"
 
@@ -72,27 +74,9 @@ export SSH_KEY_PATH="~/.ssh/rsa_id"
 # Add some nice aliases
 # For lazy people
 
-# aliases for daily work
-bindkey -s ^f "jumpto\n"
-
-
-export OF_ROOT=~/Documents/of_v0.11.0_osx_release
-
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-export PATH="/usr/local/opt/php@7.4/bin:$PATH"
-export PATH="/usr/local/opt/php@7.4/sbin:$PATH"
 
-# Setup rbenv
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
-
-# Android Studio
-export JAVA_HOME="/Applications/Android Studio.app/Contents/jre/Contents/Home"
-export ANDROID_HOME=$HOME/Library/Android/sdk
-export PATH=$PATH:$ANDROID_HOME/emulator
-export PATH=$PATH:$ANDROID_HOME/tools
-export PATH=$PATH:$ANDROID_HOME/tools/bin
-export PATH=$PATH:$ANDROID_HOME/platform-tools
+source "/Users/lucasdinonolte/.oh-my-zsh/custom/themes/spaceship.zsh-theme"

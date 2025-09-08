@@ -1,32 +1,9 @@
-mksketch() {
-  local tstamp="$(date +%Y%m%d_%H%M)"
-  mkdir -p "$SKETCHES/sketch_$tstamp"
-  cd "$SKETCHES/sketch_$tstamp"
-  touch "sketch_$tstamp.pde"
-  $EDITOR "sketch_$tstamp.pde"
-}
-
-mkprojectdirs() {
-  mkdir '01 Orga'
-  mkdir '02 Input'
-  mkdir '03 Recherche'
-  mkdir '04 Layout'
-  mkdir '05 Produktion'
-  mkdir '06 Präsentation'
-}
-
-jumpto() {
-  selected=$(find ~/work/__dev '/Users/lucasdinonolte/DSI Dropbox/Projects' -mindepth 1 -maxdepth 2 -type d | fzf)
-
-  if [[ -z $selected ]]; then
-    exit 0
+# Create a new directory and enter it
+mc () {
+  if [ $# -ne 1 ]; then
+    echo 'usage: mc <dir-name>'
+    return 137
   fi
-
-  echo $selected
-  cd $selected
+  local dir_name="$1"
+  mkdir -p "$dir_name" && cd "$dir_name"
 }
-
-serveDir() {
-  python3 -m SimpleHTTPServer 3000
-}
-
