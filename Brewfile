@@ -32,3 +32,5 @@ cask "figma"
 cask "google-chrome"
 cask "ghostty"
 cask "1password"
+cask "nikitabobko/tap/aerospace"
+
