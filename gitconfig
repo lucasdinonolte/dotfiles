@@ -55,6 +55,7 @@
   pfusch = push --force-with-lease
   push-current = push -u origin HEAD
   todo = "!git diff $(git merge-base HEAD main) | grep -E '^(diff|\\+)' | grep "TODO""
+  pretty = "!npx prettier --write $(git diff --name-only main | tr '\n' ' ')"
 [commit]
 	template = ~/.git-commit-template
 	gpgsign = true
